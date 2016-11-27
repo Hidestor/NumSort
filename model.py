@@ -19,6 +19,8 @@ class SimpleSeq2SeqModel(object):
 		self.decoder_time_steps = config.decoder_time_steps
 		self.keep_prob = config.keep_prob
 		self.training = config.training
+		self.batch_average_loss = config.batch_average_loss
+		self.optimization_technique = config.optimization_technique
 
 		if self.cell_type == "lstm":
 			self.cell = tf.nn.rnn_cell.BasicLSTMCell(self.cell_size)
@@ -26,7 +28,7 @@ class SimpleSeq2SeqModel(object):
 			self.cell = tf.nn.rnn_cell.GRUCell(self.cell_size)
 
 		if self.num_layers > 1:
-			self.cell = tf.nn.rnn_cell.MultiRNNCell([self.cell] * num_layers)
+			self.cell = tf.nn.rnn_cell.MultiRNNCell([self.cell] * self.num_layers)
 		
 		self.cell = tf.nn.rnn_cell.DropoutWrapper(self.cell, output_keep_prob=self.keep_prob)
 
@@ -101,13 +103,21 @@ class SimpleSeq2SeqModel(object):
 			self.loss = tf.reduce_sum(self.loss, [0,1,2])
 
 		else:
+
 			self.loss = tf.nn.sparse_softmax_cross_entropy_with_logits(logits = self.logits,
 																	   labels = self.targets)
 			self.loss = tf.reduce_sum(self.loss, [0,1])
 
+		if self.batch_average_loss:
+			batch_size = tf.shape(self.logits[0])[0]
+			self.loss /= tf.cast(batch_size, self.loss.dtype)
 
-		self.optimizer = tf.train.GradientDescentOptimizer(self.learning_rate).minimize(self.loss)
-		
+		if self.optimization_technique == "GradientDescent":
+			self.optimizer = tf.train.GradientDescentOptimizer(self.learning_rate).minimize(self.loss)
+		elif self.optimization_technique == "AdamGrad":
+			self.optimizer = tf.train.AdagradOptimizer(self.learning_rate).minimize(self.loss)
+		else:
+			raise ValueError("Optimization technique (%s) is not defined."%self.optimization_technique)
 		self.predictions  = tf.nn.top_k(self.logits, 1)
 
 	def assign_lr(self, sess, lr_value):

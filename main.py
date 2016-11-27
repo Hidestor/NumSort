@@ -5,13 +5,14 @@ from model import SimpleSeq2SeqModel
 import tensorflow as tf
 import numpy as np
 import data_utils
+from data_function_s import batch_gen, encode
 
 
 class Config(object):
-	cell_size = 512
+	cell_size = 100
 	num_layers = 1
 	batch_size = 32
-	input_size = 128
+	input_size = 100
 	learning_rate = 0.1
 	cell_type = "gru"
 	encoder_end_padding = False
@@ -23,6 +24,8 @@ class Config(object):
 	decay_epoch = 20
 	keep_prob = 0.5
 	intializations = 0.1
+	batch_average_loss = True
+	optimization_technique = "AdamGrad" #Either "AdamGrad" or "GradientDescent"
 	#Dataset-parameters
 	#Assuming that the lower limit is always '1'. 
 	#<go> & <end> padding have index '0'.
@@ -57,6 +60,8 @@ class TestConfig(object):
 	decay_epoch = 3
 	keep_prob = 0.8
 	intializations = 0.1
+	batch_average_loss = True
+	optimization_technique = "AdamGrad" #Either "AdamGrad" or "GradientDescent"
 	#Dataset-parameters
 	#Assuming that the lower limit is always '1'. 
 	#<go> & <end> padding have index '0'.
@@ -123,6 +128,7 @@ def adjust_timesteps(config):
 
 def train(config):
 	train, test = data_utils.get_training_and_test_dataset(config)
+
 	encoder_inputs_train, decoder_inputs_train = pad_inputs(train[0], train[1], config)
 	encoder_inputs_test, decoder_inputs_test = pad_inputs(test[0], test[1], config)
 
