@@ -1,5 +1,7 @@
 """Seq2Seq model."""
 import tensorflow as tf
+import sys
+sys.dont_write_bytecode = True
 
 class SimpleSeq2SeqModel(object):
 

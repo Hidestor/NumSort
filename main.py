@@ -1,5 +1,6 @@
 """Seq2seq model example for sorting numbers."""
-
+import sys
+sys.dont_write_bytecode = True
 from model import SimpleSeq2SeqModel
 import tensorflow as tf
 import numpy as np

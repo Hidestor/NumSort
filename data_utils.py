@@ -2,6 +2,8 @@
 import numpy as np
 import itertools
 import random
+import sys
+sys.dont_write_bytecode = True
 
 def write_file(filename, data):
 	file = open(filename, 'w')
