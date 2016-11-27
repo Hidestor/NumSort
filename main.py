@@ -23,6 +23,7 @@ class Config(object):
 	lr_decay = 0.5
 	decay_epoch = 20
 	keep_prob = 0.5
+	intializations = 0.1
 	#Dataset-parameters
 	#Assuming that the lower limit is always '1'. 
 	#<go> & <end> padding have index '0'.
@@ -57,6 +58,7 @@ class TestConfig(object):
 	lr_decay = 0.5
 	decay_epoch = 3
 	keep_prob = 0.8
+	intializations = 0.1
 	#Dataset-parameters
 	#Assuming that the lower limit is always '1'. 
 	#<go> & <end> padding have index '0'.
@@ -134,7 +136,7 @@ def train(config):
 		encoder_inputs_test_one_hot = data_utils.get_one_hot_repr(encoder_inputs_test, config)
 		decoder_inputs_test_one_hot = data_utils.get_one_hot_repr(decoder_inputs_test, config)
 
-	initializer = tf.random_uniform_initializer(-0.01, 0.01, seed = config.seed)
+	initializer = tf.random_uniform_initializer(-config.intializations, config.intializations, seed = config.seed)
 
 	with tf.Graph().as_default():
 		with tf.variable_scope("block", initializer=initializer):
