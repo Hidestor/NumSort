@@ -16,7 +16,6 @@ class Config(object):
 	cell_type = "gru"
 	encoder_end_padding = False
 	decoder_go_padding = True #This has to be always true.
-	is_training = True
 	seed = 200
 	output_projection = None
 	number_epochs = 100
@@ -51,7 +50,6 @@ class TestConfig(object):
 	cell_type = "gru"
 	encoder_end_padding = False
 	decoder_go_padding = True #This has to be always true.
-	is_training = True
 	seed = 200
 	output_projection = None
 	number_epochs = 100
