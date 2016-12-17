@@ -42,8 +42,10 @@ from keras.models import Sequential
 from keras.layers.core import Activation, RepeatVector, TimeDistributedDense, Dropout, Dense
 from keras.layers import recurrent
 import numpy as np
+import tensorflow as tf
 RNN = recurrent.LSTM
-
+print(tf.version)
+exit()
 # global parameters.
 batch_size=32
 seq_len = 10
@@ -84,14 +86,13 @@ for ind,(X,Y) in enumerate(batch_gen(batch_size, seq_len, max_no)):
     loss, acc = model.train_on_batch(X, Y)
     print loss, acc
     # # We'll test RNN after each 250 iteration to check how well it is performing
-    # if ind % 250 == 0:
-    #     testX = np.random.randint(max_no, size=(1, seq_len))
-    #     test = encode(testX, seq_len, max_no)
-    #     print testX
-    #     #pdb.set_trace()
-    #     y = model.predict(test, batch_size=1)
-    #     print "actual sorted output is"
-    #     print np.sort(testX)
-    #     print "sorting done by RNN is"
-    #     print np.argmax(y, axis=2)
-    #     print "\n"
+    if ind % 250 == 0:
+        testX = np.random.randint(max_no, size=(1, seq_len))
+        test = encode(testX, seq_len, max_no)
+        print testX
+        y = model.predict(test, batch_size=1)
+        print "actual sorted output is"
+        print np.sort(testX)
+        print "sorting done by RNN is"
+        print np.argmax(y, axis=2)
+        print "\n"
