@@ -5,7 +5,6 @@ from model import SimpleSeq2SeqModel
 import tensorflow as tf
 import numpy as np
 import data_utils
-from data_function_s import batch_gen, encode
 
 
 class Config(object):
